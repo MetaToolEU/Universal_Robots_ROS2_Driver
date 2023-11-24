@@ -40,7 +40,6 @@ from launch.substitutions import Command, FindExecutable, LaunchConfiguration, P
 
 
 def launch_setup(context, *args, **kwargs):
-
     # Initialize Arguments
     ur_type = LaunchConfiguration("ur_type")
     robot_ip = LaunchConfiguration("robot_ip")
@@ -50,6 +49,7 @@ def launch_setup(context, *args, **kwargs):
     # General arguments
     runtime_config_package = LaunchConfiguration("runtime_config_package")
     controllers_file = LaunchConfiguration("controllers_file")
+    rviz_view_file = LaunchConfiguration("rviz_view_file")
     description_package = LaunchConfiguration("description_package")
     description_file = LaunchConfiguration("description_file")
     tf_prefix = LaunchConfiguration("tf_prefix")
@@ -72,9 +72,9 @@ def launch_setup(context, *args, **kwargs):
     tool_voltage = LaunchConfiguration("tool_voltage")
     reverse_ip = LaunchConfiguration("reverse_ip")
     script_command_port = LaunchConfiguration("script_command_port")
-    reverse_port = LaunchConfiguration("reverse_port")
-    script_sender_port = LaunchConfiguration("script_sender_port")
-    trajectory_port = LaunchConfiguration("trajectory_port")
+    trajectory_port=LaunchConfiguration("trajectory_port")#"50004"
+    reverse_port=LaunchConfiguration("reverse_port")#"50001"
+    script_sender_port=LaunchConfiguration("script_sender_port")#"50002"
 
     joint_limit_params = PathJoinSubstitution(
         [FindPackageShare(description_package), "config", ur_type, "joint_limits.yaml"]
@@ -185,14 +185,14 @@ def launch_setup(context, *args, **kwargs):
             "script_command_port:=",
             script_command_port,
             " ",
+            "trajectory_port:=",
+            trajectory_port,
+            " ",
             "reverse_port:=",
             reverse_port,
             " ",
             "script_sender_port:=",
             script_sender_port,
-            " ",
-            "trajectory_port:=",
-            trajectory_port,
             " ",
         ]
     )
@@ -202,8 +202,12 @@ def launch_setup(context, *args, **kwargs):
         [FindPackageShare(runtime_config_package), "config", controllers_file]
     )
 
+    # rviz_config_file = PathJoinSubstitution(
+    #     [FindPackageShare(description_package), "rviz", "view_robot.rviz"]
+    # )
+
     rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare(description_package), "rviz", "view_robot.rviz"]
+        [FindPackageShare(description_package), "rviz", rviz_view_file]
     )
 
     # define update rate
@@ -317,7 +321,7 @@ def launch_setup(context, *args, **kwargs):
             arguments=[
                 name,
                 "--controller-manager",
-                "/controller_manager",
+                "controller_manager",
                 "--controller-manager-timeout",
                 controller_spawner_timeout,
             ]
@@ -343,7 +347,7 @@ def launch_setup(context, *args, **kwargs):
         arguments=[
             initial_joint_controller,
             "-c",
-            "/controller_manager",
+            "controller_manager",
             "--controller-manager-timeout",
             controller_spawner_timeout,
         ],
@@ -355,7 +359,7 @@ def launch_setup(context, *args, **kwargs):
         arguments=[
             initial_joint_controller,
             "-c",
-            "/controller_manager",
+            "controller_manager",
             "--controller-manager-timeout",
             controller_spawner_timeout,
             "--inactive",
@@ -426,6 +430,13 @@ def generate_launch_description():
     )
     declared_arguments.append(
         DeclareLaunchArgument(
+            "rviz_view_file",
+            default_value="view_robot.rviz",
+            description="YAML file with the controllers configuration.",
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
             "controllers_file",
             default_value="ur_controllers.yaml",
             description="YAML file with the controllers configuration.",
@@ -473,7 +484,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "headless_mode",
-            default_value="false",
+            default_value="true",
             description="Enable headless mode for robot control",
         )
     )
@@ -587,29 +598,31 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "script_command_port",
-            default_value="50004",
-            description="Port that will be opened to forward URScript commands to the robot.",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "reverse_port",
-            default_value="50001",
-            description="Port that will be opened to send cyclic instructions from the driver to the robot controller.",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "script_sender_port",
-            default_value="50002",
-            description="The driver will offer an interface to query the external_control URScript on this port.",
+            default_value="50010",
+            description="Port that will be opened to forward script commands from the driver to the robot",
         )
     )
     declared_arguments.append(
         DeclareLaunchArgument(
             "trajectory_port",
-            default_value="50003",
-            description="Port that will be opened for trajectory control.",
+            default_value="50009",
+            description="Port that will be opened to forward script commands from the driver to the robot",
         )
     )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "reverse_port",
+            default_value="50006",
+            description="Port that will be opened to forward script commands from the driver to the robot",
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "script_sender_port",
+            default_value="50007",
+            description="Port that will be opened to forward script commands from the driver to the robot",
+        )
+    )
+
+
     return LaunchDescription(declared_arguments + [OpaqueFunction(function=launch_setup)])
