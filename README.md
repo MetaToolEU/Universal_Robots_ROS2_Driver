@@ -166,7 +166,7 @@ building might fail occasionally.
 5. Clone relevant packages, install dependencies, compile, and source the workspace by using:
    ```
    cd $COLCON_WS
-   git clone -b humble https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver.git src/Universal_Robots_ROS2_Driver
+   git clone -b humble https://github.com/MetaToolEU/Universal_Robots_ROS2_Driver.git src/Universal_Robots_ROS2_Driver
    vcs import src --skip-existing --input src/Universal_Robots_ROS2_Driver/Universal_Robots_ROS2_Driver-not-released.${ROS_DISTRO}.repos
    rosdep update
    rosdep install --ignore-src --from-paths src -y
