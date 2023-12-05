@@ -40,7 +40,7 @@ def generate_launch_description():
     )
     Right_arm_robot_ip_arg = DeclareLaunchArgument(
             "Right_arm_robot_ip",
-            default_value='192.168.1.128',
+            default_value='192.168.10.25',
             description="IP address by which the robot can be reached.",
     )
     Right_arm_controller_file_arg = DeclareLaunchArgument(
@@ -58,22 +58,22 @@ def generate_launch_description():
 
     Right_arm_script_command_port_arg =  DeclareLaunchArgument(
             "Right_arm_script_command_port",
-            default_value="50002",
+            default_value="50010",
             description="Port that will be opened to forward script commands from the driver to the robot",
         )
     Right_arm_trajectory_port_arg = DeclareLaunchArgument(
             "Right_arm_trajectory_port",
-            default_value="50003",
+            default_value="50009",
             description="Port that will be opened to forward script commands from the driver to the robot",
         )
     Right_arm_reverse_port_arg = DeclareLaunchArgument(
             "Right_arm_reverse_port",
-            default_value="50001",
+            default_value="50006",
             description="Port that will be opened to forward script commands from the driver to the robot",
         )
     Right_arm_script_sender_port_arg = DeclareLaunchArgument(
             "Right_arm_script_sender_port",
-            default_value="50005",
+            default_value="50007",
             description="Port that will be opened to forward script commands from the driver to the robot",
         )
     right_rviz_conf_arg = DeclareLaunchArgument(
@@ -84,7 +84,7 @@ def generate_launch_description():
 
     Left_arm_robot_ip_arg = DeclareLaunchArgument(
             "Left_arm_robot_ip",
-            default_value='192.168.10.25',
+            default_value='192.168.10.23',
             description="IP address by which the robot can be reached.",
     )
     Left_arm_controller_file_arg = DeclareLaunchArgument(
@@ -101,23 +101,23 @@ def generate_launch_description():
     )
     Left_arm_script_command_port_arg =  DeclareLaunchArgument(
             "Left_arm_script_command_port",
-            default_value="50010",
+            default_value="50005",
             description="Port that will be opened to forward script commands from the driver to the robot",
     )
 
     Left_arm_trajectory_port_arg = DeclareLaunchArgument(
             "Left_arm_trajectory_port",
-            default_value="50009",
+            default_value="50004",
             description="Port that will be opened to forward script commands from the driver to the robot",
         )
     Left_arm_reverse_port_arg = DeclareLaunchArgument(
             "Left_arm_reverse_port",
-            default_value="50006",
+            default_value="50001",
             description="Port that will be opened to forward script commands from the driver to the robot",
         )
     Left_arm_script_sender_port_arg = DeclareLaunchArgument(
             "Left_arm_script_sender_port",
-            default_value="50007",
+            default_value="50002",
             description="Port that will be opened to forward script commands from the driver to the robot",
         )
 
@@ -194,3 +194,4 @@ def generate_launch_description():
         Right_arm_with_namespace,
         Left_arm_with_namespace
     ])
+
