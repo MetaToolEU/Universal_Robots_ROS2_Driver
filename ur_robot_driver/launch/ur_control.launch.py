@@ -40,6 +40,7 @@ from launch.substitutions import Command, FindExecutable, LaunchConfiguration, P
 
 
 def launch_setup(context, *args, **kwargs):
+
     # Initialize Arguments
     ur_type = LaunchConfiguration("ur_type")
     robot_ip = LaunchConfiguration("robot_ip")
@@ -72,9 +73,9 @@ def launch_setup(context, *args, **kwargs):
     tool_voltage = LaunchConfiguration("tool_voltage")
     reverse_ip = LaunchConfiguration("reverse_ip")
     script_command_port = LaunchConfiguration("script_command_port")
-    trajectory_port=LaunchConfiguration("trajectory_port")#"50004"
-    reverse_port=LaunchConfiguration("reverse_port")#"50001"
-    script_sender_port=LaunchConfiguration("script_sender_port")#"50002"
+    reverse_port = LaunchConfiguration("reverse_port")
+    script_sender_port = LaunchConfiguration("script_sender_port")
+    trajectory_port = LaunchConfiguration("trajectory_port")
 
     joint_limit_params = PathJoinSubstitution(
         [FindPackageShare(description_package), "config", ur_type, "joint_limits.yaml"]
@@ -185,14 +186,14 @@ def launch_setup(context, *args, **kwargs):
             "script_command_port:=",
             script_command_port,
             " ",
-            "trajectory_port:=",
-            trajectory_port,
-            " ",
             "reverse_port:=",
             reverse_port,
             " ",
             "script_sender_port:=",
             script_sender_port,
+            " ",
+            "trajectory_port:=",
+            trajectory_port,
             " ",
         ]
     )
@@ -484,7 +485,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "headless_mode",
-            default_value="true",
+            default_value="false",
             description="Enable headless mode for robot control",
         )
     )
@@ -598,31 +599,29 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "script_command_port",
-            default_value="50010",
-            description="Port that will be opened to forward script commands from the driver to the robot",
-        )
-    )
-    declared_arguments.append(
-        DeclareLaunchArgument(
-            "trajectory_port",
-            default_value="50009",
-            description="Port that will be opened to forward script commands from the driver to the robot",
+            default_value="50005",
+            description="Port that will be opened to forward URScript commands to the robot.",
         )
     )
     declared_arguments.append(
         DeclareLaunchArgument(
             "reverse_port",
-            default_value="50006",
-            description="Port that will be opened to forward script commands from the driver to the robot",
+            default_value="50001",
+            description="Port that will be opened to send cyclic instructions from the driver to the robot controller.",
         )
     )
     declared_arguments.append(
         DeclareLaunchArgument(
             "script_sender_port",
-            default_value="50007",
-            description="Port that will be opened to forward script commands from the driver to the robot",
+            default_value="50002",
+            description="The driver will offer an interface to query the external_control URScript on this port.",
         )
     )
-
-
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "trajectory_port",
+            default_value="50004",
+            description="Port that will be opened for trajectory control.",
+        )
+    )
     return LaunchDescription(declared_arguments + [OpaqueFunction(function=launch_setup)])
